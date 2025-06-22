@@ -1,10 +1,5 @@
 # Reproducing scGCL: Graph Contrastive Learning for scRNA-seq Imputation
 
-![fram1 (1)](https://github.com/zehaoxiong123/scGCL/blob/main/scGCL.png)
-בהתבסס על מה שעשית, הנה גרסה מקצועית, ברורה ומעודכנת של קובץ README שיכולה להתאים לפרויקט שלך ב-GitHub:
-
----
-
 [![scGCL](https://github.com/zehaoxiong123/scGCL/blob/main/scGCL.png)](https://github.com/zehaoxiong123/scGCL)
 
 This repository reproduces the experiments described in the original **scGCL** paper, which introduced a novel method for imputing scRNA-seq data using Graph Contrastive Learning and a Zero-Inflated Negative Binomial (ZINB) autoencoder.
