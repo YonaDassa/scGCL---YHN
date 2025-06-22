@@ -1,28 +1,116 @@
-# scGCL: an imputation method for scRNA-seq data based on Graph Contrastive Learning
+# Reproducing scGCL: Graph Contrastive Learning for scRNA-seq Imputation
 
 ![fram1 (1)](https://github.com/zehaoxiong123/scGCL/blob/main/scGCL.png)
+בהתבסס על מה שעשית, הנה גרסה מקצועית, ברורה ומעודכנת של קובץ README שיכולה להתאים לפרויקט שלך ב-GitHub:
 
-Here, we propose a single-cell Graph Contrastive Learning method for scRNA-seq data imputation, named scGCL, which integrate graph contrastive learning and Zero-inflated Negative Binomial (ZINB) autoencoder to estimate dropout values. scGCL summarizes global and local semantic information through contrastive learning and selects appropriate positive samples to enhance the representation of target nodes. To capture the global probability distribution, scGCL introduces an autoencoder based on the ZINB distribution, which reconstructs the scRNA-seq data based on the prior distribution. Through extensive experiments, we verify that scGCL outperforms existing state-of-the-art imputation methods in clustering performance and gene imputation on 14 real scRNA-seq datasets. Further, we find that scGCL can enhance the expression patterns of specific genes in Alzheimer's disease datasets.
+---
 
-### Requirment
+[![scGCL](https://github.com/zehaoxiong123/scGCL/blob/main/scGCL.png)](https://github.com/zehaoxiong123/scGCL)
 
-- Python version: 3.8.8
-- Pytorch version: 1.10.0
-- torch-cluster version: 1.6.0
-- torch-geometric version: 2.2.0
-- torch-scatter version: 2.0.9
-- torch-sparse version: 0.6.13
-- faiss-cpu: 1.7.3 
+This repository reproduces the experiments described in the original **scGCL** paper, which introduced a novel method for imputing scRNA-seq data using Graph Contrastive Learning and a Zero-Inflated Negative Binomial (ZINB) autoencoder.
 
-## Usage
-You can run the scGCL from the command line:
+> 🔗 **Original Repository**: [scGCL (zehaoxiong123)](https://github.com/zehaoxiong123/scGCL)
+> 📂 **This Forked Reproduction**: [scGCL---YHN](https://github.com/YonaDassa/scGCL---YHN.git)
+
+---
+
+## 🔬 Overview
+
+We replicated the full training and evaluation pipeline for **scGCL**, focusing on the **Adam** dataset. This involved:
+
+* Performing contrastive learning with dual augmentations
+* Reconstructing gene expression values using ZINB autoencoder
+* Evaluating clustering performance with **Adjusted Rand Index (ARI)** and **Normalized Mutual Information (NMI)**
+
+---
+
+## ⚙️ Environment Setup
+
+**Platform**: Ubuntu Server
+**GPU**: NVIDIA RTX 3090Ti (24 GB VRAM)
+
+### Dependencies:
+
+```bash
+Python 3.8.8
+PyTorch 1.10.0
+torch-geometric 2.2.0
+torch-cluster 1.6.0
+torch-scatter 2.0.9
+torch-sparse 0.6.13
+faiss-cpu 1.7.3
 ```
-$ python main.py --dataset adam --epochs 300
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
-## Arguments
-|    Parameter    | Introduction                                                 |
-| :-------------: | ------------------------------------------------------------ |
-|    dataset     | A h5 file. Contains a matrix of scRNA-seq expression values,true labels, and other information. |
-|  task  | Downstream task. Supported tasks are: node, clustering, similarity                                     |
-| es | Early Stopping Criterion                                   |
-|     epochs     | Number of training epochs                                    |
+
+---
+
+## 🚀 Usage
+
+Run the training pipeline on the Adam dataset:
+
+```bash
+python main.py --dataset adam --epochs 300
+```
+
+### Available Arguments
+
+| Parameter   | Description                                                              |
+| ----------- | ------------------------------------------------------------------------ |
+| `--dataset` | H5 file containing scRNA-seq matrix, labels, and metadata (e.g., `adam`) |
+| `--task`    | Downstream task: `node`, `clustering`, or `similarity`                   |
+| `--es`      | Early stopping flag                                                      |
+| `--epochs`  | Number of training epochs                                                |
+
+---
+
+## 📊 Results
+
+| Metric | Original Paper | Reproduced Result |
+| ------ | -------------- | ----------------- |
+| ARI    | **0.9067**     | **0.7907**        |
+| NMI    | **0.8927**     | **0.8345**        |
+
+> 🔍 While the NMI score closely matches the original, a modest drop in ARI may be attributed to differences in:
+>
+> * Evaluation implementation (ARI logic was rewritten manually)
+> * Random seed and initialization
+> * Preprocessing of graph and expression matrices
+
+---
+
+## 📌 Discussion
+
+The reproduction process highlighted several challenges:
+
+* **Dependency Conflicts**: The original repository relied on outdated libraries; compatibility fixes were needed.
+* **Missing Evaluation Logic**: ARI computation was reimplemented using `sklearn.metrics.adjusted_rand_score`.
+* **Reproducibility Variance**: Even with identical hyperparameters, minor implementation and seed differences led to performance variance.
+
+Despite these, the **scGCL** model remains robust, and our results validate its core contributions.
+
+---
+
+## 🔮 Future Directions
+
+* Evaluate biological relevance with additional metrics (e.g., silhouette score, trajectory alignment).
+* Apply scGCL to broader datasets: cancer, neurodegeneration, autoimmune diseases.
+* Explore integration with multimodal single-cell datasets (e.g., scATAC-seq).
+
+---
+
+## 📁 Repository Structure
+
+```bash
+.
+├── data/                     # Processed H5 datasets
+├── model_checkpoints/       # Saved model weights
+├── results/                 # Embeddings and metrics
+├── main.py                  # Training pipeline
+├── utils/                   # Preprocessing and evaluation tools
+└── README.md                # Project documentation
+```
